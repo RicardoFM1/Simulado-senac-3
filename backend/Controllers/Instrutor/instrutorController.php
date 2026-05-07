@@ -3,23 +3,22 @@
 use Respect\Validation\Exceptions\NestedValidationException;
 use Respect\Validation\Validator as v;
 
-require_once __DIR__ . "/../../Services/Participante/participanteService.php";
+require_once __DIR__ . "/../../Services/Instrutor/instrutorService.php";
 
-class ParticipanteController
+class InstrutorController
 {
-    protected $participanteService;
+    protected $instrutorService;
 
 
     public function __construct()
     {
-        $this->participanteService = new ParticipanteService();
+        $this->instrutorService = new InstrutorService();
     }
 
     public function validarDados($dados)
     {
         try {
             $esquema = v::key('nome', v::stringVal()->notEmpty()->length(1, 45))
-                ->key('cpf', v::cpf())
                 ->key('email', v::email())
                 ->key('telefone', v::phone());
 
@@ -27,7 +26,6 @@ class ParticipanteController
         } catch (NestedValidationException $e) {
             $mensagemPersonalizada = [
                 'nome' => 'Nome inválido',
-                'cpf' => 'Cpf inválido',
                 'email' => 'Email inválido',
                 'telefone' => 'Telefone inválido'
             ];
@@ -49,21 +47,21 @@ class ParticipanteController
         }
     }
 
-    public function listarParticipantes()
+    public function listarInstrutores()
     {
         http_response_code(200);
-        echo json_encode($this->participanteService->listarParticipantes());
+        echo json_encode($this->instrutorService->listarInstrutores());
         exit;
        
     }
 
-    public function cadastrarParticipante()
+    public function cadastrarInstrutores()
     {
         try {
             $dados = json_decode(file_get_contents('php://input'), true);
             $this->validarDados($dados);
             http_response_code(201);
-            echo json_encode($this->participanteService->cadastrarParticipante($dados));
+            echo json_encode($this->instrutorService->cadastrarInstrutor($dados));
         } catch (Exception $e) {
             http_response_code($e->getCode());
             echo json_encode([
@@ -74,15 +72,15 @@ class ParticipanteController
         }
     }
 
-    public function atualizarParticipante()
+    public function atualizarInstrutor()
     {
         try {
             $dados = json_decode(file_get_contents('php://input'), true);
-            $idParticipante = $_GET['id_participante'];
+            $idInstrutor = $_GET['id_instrutor'];
            
             $this->validarDados($dados);
             http_response_code(200);
-            echo json_encode($this->participanteService->atualizarParticipante($dados, $idParticipante));
+            echo json_encode($this->instrutorService->atualizarInstrutor($dados, $idInstrutor));
         } catch (Exception $e) {
             http_response_code($e->getCode());
             echo json_encode([
@@ -93,13 +91,13 @@ class ParticipanteController
         }
     }
 
-    public function deletarParticipante()
+    public function deletarInstrutor()
     {
         try {
-            $idParticipante = $_GET['id_participante'];
+            $idInstrutor = $_GET['id_instrutor'];
             http_response_code(200);
 
-            echo json_encode($this->participanteService->deletarParticipante($idParticipante));
+            echo json_encode($this->instrutorService->deletarInstrutor($idInstrutor));
         } catch (Exception $e) {
             http_response_code($e->getCode());
             echo json_encode([

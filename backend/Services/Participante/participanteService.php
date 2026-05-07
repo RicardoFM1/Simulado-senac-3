@@ -37,7 +37,7 @@ class ParticipanteService
 
     public function listarParticipantes()
     {
-        $query = $this->db->query('SELECT * FROM participantes');
+        $query = $this->db->query('SELECT * FROM participante');
 
         $participantes = $query->fetchAll();
 
@@ -53,15 +53,17 @@ class ParticipanteService
             $participanteDados['cpf'] = str_replace('/\D/', '', $participanteDados['cpf']);
             $participanteDados['telefone'] = str_replace('/\D/', '', $participanteDados['telefone']);
 
-            $dataFormatada = date('Y-m-d, H:i:s', $participanteDados['data_nascimento']);
-            $criar = $this->db->prepare('INSERT INTO participante (nome, cpf, email, telefone, data_nascimento');
+            
+            $criar = $this->db->prepare('INSERT INTO participante (nome, cpf, email, telefone, data_nascimento)
+            VALUES (:nome, :cpf, :email, :telefone, :data_nascimento)');
 
 
             $criar->execute([
                 ':nome' => $participanteDados['nome'],
                 ':cpf' => $participanteDados['cpf'],
+                ':email' => $participanteDados['email'],
                 ':telefone' => $participanteDados['telefone'],
-                ':data_nascimento' => $dataFormatada
+                ':data_nascimento' => $participanteDados['data_nascimento']
             ]);
 
             return [
@@ -76,7 +78,7 @@ class ParticipanteService
                 throw new Exception('Email já em uso', 409);
             }
 
-            throw new Exception('Erro ao cadastrar participante', 500);
+            throw new Exception('Erro ao cadastrar participante' , 500);
         }
     }
 
@@ -88,7 +90,7 @@ class ParticipanteService
             $participanteDados['cpf'] = str_replace('/\D/', '', $participanteDados['cpf']);
             $participanteDados['telefone'] = str_replace('/\D/', '', $participanteDados['telefone']);
 
-            $dataFormatada = date('Y-m-d, H:i:s', $participanteDados['data_nascimento']);
+           
 
             if ($participante['sucesso'] === true) {
                 $atualizar = $this->db->prepare('UPDATE participante SET nome = :nome, cpf = :cpf,
@@ -97,8 +99,9 @@ class ParticipanteService
                 $atualizar->execute([
                     ':nome' => $participanteDados['nome'],
                     ':cpf' => $participanteDados['cpf'],
+                    ':email' => $participanteDados['email'],
                     ':telefone' => $participanteDados['telefone'],
-                    ':data_nascimento' => $dataFormatada,
+                    ':data_nascimento' => $participanteDados['data_nascimento'],
                     'id_participante' => $idParticipante
                 ]);
 
@@ -115,7 +118,7 @@ class ParticipanteService
                 throw new Exception('Email já em uso', 409);
             }
 
-            throw new Exception('Erro ao atualizar participante', 500);
+            throw new Exception('Erro ao atualizar participante' , 500);
         }
     }
 

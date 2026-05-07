@@ -3,6 +3,8 @@
 use Dotenv\Dotenv;
 require_once __DIR__ . "/../vendor/autoload.php";
 require_once __DIR__ . "/../Controllers/Participante/participanteController.php";
+require_once __DIR__ . "/../Controllers/Instrutor/instrutorController.php";
+
 
 $dotenv = Dotenv::createImmutable(__DIR__ . "/../");
 $dotenv->load();
@@ -21,19 +23,37 @@ if($metodoRequisicao === 'OPTIONS'){
     http_response_code(200);
 }
 
+
 if($rotaRequisicao === '/participante'){
     $participanteController = new ParticipanteController();
 
-    if($rotaRequisicao === "GET"){
+    if($metodoRequisicao === "GET"){
         $participanteController->listarParticipantes();
     }
-    if($rotaRequisicao === "POST"){
+    if($metodoRequisicao === "POST"){
         $participanteController->cadastrarParticipante();
     }
-    if($rotaRequisicao === "PUT"){
+    if($metodoRequisicao === "PUT"){
         $participanteController->atualizarParticipante();
     }
-    if($rotaRequisicao === "DELETE"){
+    if($metodoRequisicao === "DELETE"){
         $participanteController->deletarParticipante();
+    }
+}
+
+if($rotaRequisicao === '/instrutor'){
+    $instrutorController = new InstrutorController();
+
+    if($metodoRequisicao === "GET"){
+        $instrutorController->listarInstrutores();
+    }
+    if($metodoRequisicao === "POST"){
+        $instrutorController->cadastrarInstrutores();
+    }
+    if($metodoRequisicao === "PUT"){
+        $instrutorController->atualizarInstrutor();
+    }
+    if($metodoRequisicao === "DELETE"){
+        $instrutorController->deletarInstrutor();
     }
 }
