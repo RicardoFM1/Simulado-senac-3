@@ -76,3 +76,29 @@ if($rotaRequisicao === '/oficina'){
         $oficinaController->deletarOficina();
     }
 }
+
+
+if($rotaRequisicao === '/inscricao'){
+    $inscricaoController = new InscricaoController();
+
+    if($metodoRequisicao === "GET"){
+        $inscricaoController->listarInscricoes();
+    }
+
+    if($metodoRequisicao === "GET" && isset($_GET['id_oficina'])){
+        $inscricaoController->listarInscricaoPorOficina();
+    }
+
+    if($metodoRequisicao === "GET" && isset($_GET['id_participante'])){
+        $inscricaoController->listarInscricaoPorParticipante();
+    }
+
+    if($metodoRequisicao === "POST"){
+        $inscricaoController->cadastrarInscricao();
+    }
+    if($metodoRequisicao === "PUT"){
+        $inscricaoController->atualizarInscricao();
+    }
+   
+}
+
