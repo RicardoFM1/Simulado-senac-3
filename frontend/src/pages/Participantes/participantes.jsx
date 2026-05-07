@@ -4,11 +4,13 @@ import { toast } from 'react-toastify';
 import Table from 'react-bootstrap/esm/Table.js';
 import api from '../../api/api';
 import Button from 'react-bootstrap/esm/Button.js';
+import ParticipanteModalNovo from '../../components/modais/participantes/participantesModalNovo.jsx';
 
 const Participantes = () => {
     const [participantes, setParticipantes] = useState([]);
     const [rows, setRows] = useState([])
-    const [showModal, setShowModal] = useState(false)
+    const [showModalNovo, setShowModalNovo] = useState(false)
+    const [showModalEditar, setShowModalEditar] = useState(false)
 
     const buscarParticipantes = async () => {
         try {
@@ -35,10 +37,22 @@ const Participantes = () => {
         { header: 'Data de nascimento', accessor: 'data_nascimento' },
     ]
 
+    const enviarDadosNovo = async (dados) => {
+        try{
+            const res = await api.post('/participante', dados)
+
+            if(res.status === 201){
+                toast.success('Participante cadastrado com sucesso!')
+            }
+        }catch(err){
+            toast(err.response.data.mensagem || 'Erro ao tentar cadastrar participante')
+        }
+    }
+
     return (
         <>
             <h1 className={style.titulo}>Participantes</h1>
-            <Button className={style.button}>Novo</Button>
+            <Button className={style.button} onClick={() => setShowModalNovo(!showModalNovo)}>Novo</Button>
             <Table responsive bordered hover>
                 <thead>
                     <tr>
@@ -58,6 +72,7 @@ const Participantes = () => {
                     ))}
                 </tbody>
             </Table>
+            <ParticipanteModalNovo handleClose={() => setShowModalNovo(false)} show={showModalNovo} setShow={setShowModalNovo} enviarDados={enviarDadosNovo} dados={participantes}/>
         </>
     )
 }
