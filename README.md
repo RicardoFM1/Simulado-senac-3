@@ -130,19 +130,41 @@ ENGINE = InnoDB;
 INSERT INTO participante (nome, cpf, email, telefone, data_nascimento)
 VALUES ('Ricardo', '05380295010', 'ricardo@gmail.com', '519999', '21-03-2000'),
 ('Ricardo2', '63996705000', 'ricardo2@gmail.com', '519999', '21-03-2001'),
-('Ricardo3', '33216310086', 'ricardo3@gmail.com', '519999', '21-03-2002');
+('Ricardo3', '99161809039', 'ricardo3@gmail.com', '519999', '21-03-2002'),
+('Ricardo4', '00001789007', 'ricardo4@gmail.com', '519999', '21-03-2003'),
+('Ricardo5', '47123407032', 'ricardo5@gmail.com', '519999', '21-03-2004'),
+('Ricardo6', '56231051064', 'ricardo6@gmail.com', '519999', '21-03-2005'),
+('Ricardo7', '71375767020', 'ricardo7@gmail.com', '519999', '21-03-2006'),
+('Ricardo8', '03493281021', 'ricardo8@gmail.com', '519999', '21-03-2007'),
+('Ricardo9', '97672214098', 'ricardo9@gmail.com', '519999', '21-03-2008'),
+('Ricardo10', '03521702049', 'ricardo10@gmail.com', '519999', '21-03-2009');
 
 
 INSERT INTO instrutor (nome, email, telefone, area_atuacao)
 VALUES ('Rodrigo', 'rodrigo@gmail.com', '5193939341', 'TI'),
-('Rodrigo2', 'rodrigo2@gmail.com', '5193939331', 'TI');
+('Rodrigo2', 'rodrigo2@gmail.com', '5193939331', 'TI'),
+('Rodrigo3', 'rodrigo3@gmail.com', '5193939331', 'Analista');
 
 INSERT INTO oficina (titulo, descricao, categoria, carga_horaria, data_oficina, horario, total_vagas, instrutor_idinstrutor)
-VALUES ('Informática', 'Oficina de informática', 'TI', 10, '21-03-2027', '10:00', 100, 1);
+VALUES ('Informática', 'Oficina de informática', 'TI', 10, '21-03-2027', '10:00', 100, 1),
+('Informática 2', 'Oficina de informática 2', 'TI', 10, '21-03-2028', '10:00', 100, 1),
+('Informática 3', 'Oficina de informática 3', 'TI', 10, '21-03-2029', '10:00', 50, 1),
+('Informática 4', 'Oficina de informática 4', 'TI', 10, '21-03-2030', '10:00', 100, 1),
+('Informática 5', 'Oficina de informática 5', 'TI', 10, '21-03-2031', '10:00', 100, 1);
+
 
 
 INSERT INTO inscricao (data_inscricao, status, participante_idparticipante, oficina_idoficina)
-VALUES ('2000-12-03 10:00:00', 'inscrito', 1, 1);
+VALUES ('2000-11-03 10:00:00', 'inscrito', 1, 1),
+ ('2000-09-03 11:00:00', 'inscrito', 2, 1),
+  ('2000-12-06 10:00:00', 'inscrito', 2, 1),
+   ('2000-12-10 10:00:00', 'inscrito', 2, 1),
+    ('2000-12-22 12:00:00', 'cancelado', 1, 1),
+     ('2000-08-03 10:00:00', 'inscrito', 1, 2),
+      ('2000-12-08 10:00:00', 'cancelado', 2, 2),
+       ('2000-12-01 10:00:00', 'inscrito', 1, 1),
+        ('2000-12-11 10:00:00', 'inscrito', 1, 1),
+         ('2000-12-27 10:00:00', 'inscrito', 1, 1);
 
 
 
@@ -151,6 +173,7 @@ VALUES ('2000-12-03 10:00:00', 'inscrito', 1, 1);
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
 ```
 
 # Rotas: 
