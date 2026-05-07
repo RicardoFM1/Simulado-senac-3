@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../../Connection/db.php';
 date_default_timezone_set('America/Sao_Paulo');
 
-class InstrutorService
+class OficinaService
 {
     protected $db;
 
@@ -38,13 +38,13 @@ class InstrutorService
     public function listarOficinas()
     {
         $query = $this->db->query('SELECT o.id_oficina, o.titulo, o.categoria, o.carga_horaria, o.data_oficina,
-        o.horario, o.total_vagas i.id_instrutor, i.nome, i.email, i.telefone, i.area_atuacao
+        o.horario, o.total_vagas, i.id_instrutor, i.nome, i.email, i.telefone, i.area_atuacao
          FROM oficina o INNER JOIN instrutor i ON i.id_instrutor = o.instrutor_idinstrutor ');
 
         // voltar as vagas disponíveis;
         $resultado = [];
 
-        while($row = $query->fetch()){
+        while ($row = $query->fetch()) {
             $resultado[] = [
                 'id_oficina' => $row['id_oficina'],
                 'titulo' => $row['titulo'],
@@ -67,98 +67,103 @@ class InstrutorService
             'sucesso' => true,
             'dados' => $resultado
         ];
-
-        
     }
 
-    public function cadastrarInstrutor($instrutorDados)
+    public function cadastrarOficina($oficinaDados)
     {
         try {
-            $instrutorDados['telefone'] = str_replace('/\D/', '', $instrutorDados['telefone']);
 
-            
-            $criar = $this->db->prepare('INSERT INTO instrutor (nome, email, telefone, area_atuacao)
-            VALUES (:nome, :email, :telefone, :area_atuacao)');
+
+            $criar = $this->db->prepare('INSERT INTO oficina (titulo, descricao, categoria, carga_horaria, data_oficina, horario, total_vagas, instrutor_idinstrutor)
+            VALUES (:titulo, :descricao, :categoria, :carga_horaria, :data_oficina, :horario, :total_vagas, :instrutor_idinstrutor)');
 
 
             $criar->execute([
-                ':nome' => $instrutorDados['nome'],
-                ':email' => $instrutorDados['email'],
-                ':telefone' => $instrutorDados['telefone'],
-                ':area_atuacao' => $instrutorDados['area_atuacao']
+                ':titulo' => $oficinaDados['titulo'],
+                ':descricao' => $oficinaDados['descricao'],
+                ':categoria' => $oficinaDados['categoria'],
+                ':carga_horaria' => $oficinaDados['carga_horaria'],
+                ':data_oficina' => $oficinaDados['data_oficina'],
+                ':horario' => $oficinaDados['horario'],
+                ':total_vagas' => $oficinaDados['total_vagas'],
+                ':instrutor_idinstrutor' => $oficinaDados['instrutor_idinstrutor']
+
+
             ]);
 
             return [
                 'sucesso' => true,
-                'mensagem' => 'Instrutor criado com sucesso'
+                'mensagem' => 'Oficina criada com sucesso'
             ];
         } catch (PDOException $e) {
-            if (str_contains($e->getMessage(), 'email')) {
-                throw new Exception('Email já em uso', 409);
+            if (str_contains($e->getMessage(), 'fk_oficina_instrutor')) {
+                throw new Exception('Instrutor referenciado não encontrado', 409);
             }
 
-            throw new Exception('Erro ao cadastrar Instrutor' , 500);
+            throw new Exception('Erro ao cadastrar Oficina' . $e->getMessage(), 500);
         }
     }
 
-    public function atualizarInstrutor($instrutorDados, $idInstrutor)
+    public function atualizarOficina($oficinaDados, $idOficina)
     {
         try {
-            $instrutor = $this->buscarInstrutorPorId($idInstrutor);
+            $oficina = $this->buscarOficinaPorId($idOficina);
 
-            
-            $instrutorDados['telefone'] = str_replace('/\D/', '', $instrutorDados['telefone']);
 
-           
-
-            if ($instrutor['sucesso'] === true) {
-                $atualizar = $this->db->prepare('UPDATE instrutor SET nome = :nome, 
-            email = :email, telefone = :telefone, area_atuacao = :area_atuacao WHERE id_instrutor = :id_instrutor');
+            if ($oficina['sucesso'] === true) {
+                $atualizar = $this->db->prepare('UPDATE oficina SET titulo = :titulo, 
+            descricao = :descricao, categoria = :categoria, carga_horaria = :carga_horaria,
+            data_oficina = :data_oficina, horario = :horario, total_vagas = :total_vagas, instrutor_idinstrutor = :instrutor_idinstrutor
+             WHERE id_oficina = :id_oficina');
 
                 $atualizar->execute([
-                    ':nome' => $instrutorDados['nome'],
-                    ':email' => $instrutorDados['email'],
-                    ':telefone' => $instrutorDados['telefone'],
-                    ':area_atuacao' => $instrutorDados['area_atuacao'],
-                    'id_instrutor' => $idInstrutor
+                    ':titulo' => $oficinaDados['titulo'],
+                    ':descricao' => $oficinaDados['descricao'],
+                    ':categoria' => $oficinaDados['categoria'],
+                    ':carga_horaria' => $oficinaDados['carga_horaria'],
+                    ':data_oficina' => $oficinaDados['data_oficina'],
+                    ':horario' => $oficinaDados['horario'],
+                    ':total_vagas' => $oficinaDados['total_vagas'],
+                    ':instrutor_idinstrutor' => $oficinaDados['instrutor_idinstrutor'],
+                    ':id_oficina' => $idOficina
                 ]);
 
                 return [
                     'sucesso' => true,
-                    'mensagem' => 'Instrutor atualizado com sucesso'
+                    'mensagem' => 'Oficina atualizada com sucesso'
                 ];
             }
         } catch (PDOException $e) {
-            if (str_contains($e->getMessage(), 'email')) {
-                throw new Exception('Email já em uso', 409);
+            if (str_contains($e->getMessage(), 'fk_oficina_instrutor')) {
+                throw new Exception('Instrutor referenciado não encontrado', 409);
             }
 
-            throw new Exception('Erro ao atualizar instrutor' , 500);
+            throw new Exception('Erro ao atualizar oficina', 500);
         }
     }
 
-    public function deletarInstrutor($idInstrutor)
+    public function deletarOficina($idOficina)
     {
         try {
-            $instrutor = $this->buscarInstrutorPorId($idInstrutor);
-            if ($instrutor['sucesso'] === true) {
-                $deletar = $this->db->prepare('DELETE FROM instrutor WHERE id_instrutor = :id_instrutor');
+            $oficina = $this->buscarOficinaPorId($idOficina);
+            if ($oficina['sucesso'] === true) {
+                $deletar = $this->db->prepare('DELETE FROM oficina WHERE id_oficina = :id_oficina');
 
                 $deletar->execute([
-                    'id_instrutor' => $idInstrutor
+                    'id_oficina' => $idOficina
                 ]);
 
                 return [
                     'sucesso' => true,
-                    'mensagem' => 'Instrutor deletado com sucesso'
+                    'mensagem' => 'Oficina deletada com sucesso'
                 ];
             }
         } catch (PDOException $e) {
-            if(str_contains($e->getMessage(), 'parent row')){
-                throw new Exception('Impossível deletar instrutor referenciado', 409);
+            if (str_contains($e->getMessage(), 'parent row')) {
+                throw new Exception('Impossível deletar oficina referenciada', 409);
             }
 
-            throw new Exception('Erro ao deletar instrutor', 500);
+            throw new Exception('Erro ao deletar oficina', 500);
         }
     }
 }

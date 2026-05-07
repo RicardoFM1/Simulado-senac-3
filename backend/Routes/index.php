@@ -4,6 +4,8 @@ use Dotenv\Dotenv;
 require_once __DIR__ . "/../vendor/autoload.php";
 require_once __DIR__ . "/../Controllers/Participante/participanteController.php";
 require_once __DIR__ . "/../Controllers/Instrutor/instrutorController.php";
+require_once __DIR__ . "/../Controllers/Oficina/oficinaController.php";
+
 
 
 $dotenv = Dotenv::createImmutable(__DIR__ . "/../");
@@ -55,5 +57,22 @@ if($rotaRequisicao === '/instrutor'){
     }
     if($metodoRequisicao === "DELETE"){
         $instrutorController->deletarInstrutor();
+    }
+}
+
+if($rotaRequisicao === '/oficina'){
+    $oficinaController = new OficinaController();
+
+    if($metodoRequisicao === "GET"){
+        $oficinaController->listarOficinas();
+    }
+    if($metodoRequisicao === "POST"){
+        $oficinaController->cadastrarOficina();
+    }
+    if($metodoRequisicao === "PUT"){
+        $oficinaController->atualizarOficina();
+    }
+    if($metodoRequisicao === "DELETE"){
+        $oficinaController->deletarOficina();
     }
 }
