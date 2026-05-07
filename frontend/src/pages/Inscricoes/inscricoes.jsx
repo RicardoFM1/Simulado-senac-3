@@ -2,7 +2,7 @@ import Button from 'react-bootstrap/esm/Button'
 import style from './inscricoes.module.css'
 
 const Inscricoes = () => {
-    return (
+    (
         <>
        
         

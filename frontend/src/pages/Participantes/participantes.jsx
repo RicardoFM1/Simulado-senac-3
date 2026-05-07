@@ -18,7 +18,7 @@ const Participantes = () => {
 
 
             setParticipantes(res.data.dados)
-
+            console.log(res.data.dados)
         } catch (err) {
             toast.error('Erro ao buscar participantes');
         }
@@ -26,10 +26,12 @@ const Participantes = () => {
 
     useEffect(() => {
         buscarParticipantes()
-        setRows(participantes);
+        
+       
     }, [])
 
     const columns = [
+        { header: 'Id do participante', accessor: 'id_participante'},
         { header: 'Nome', accessor: 'nome' },
         { header: 'Cpf', accessor: 'cpf' },
         { header: 'Email', accessor: 'email' },
@@ -62,14 +64,16 @@ const Participantes = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {participantes.map(rows => (
-                        <tr>
+                   {participantes.map(participante => (
+
+                       <tr>
                             {columns.map(columns => (
-                                <td key={columns.accessor}>{participantes[columns.accessor]}</td>
+                                <td key={columns.accessor}>{participante[columns.accessor]}</td>
 
                             ))}
                         </tr>
-                    ))}
+                    
+                        ))}
                 </tbody>
             </Table>
             <ParticipanteModalNovo handleClose={() => setShowModalNovo(false)} show={showModalNovo} setShow={setShowModalNovo} enviarDados={enviarDadosNovo} dados={participantes}/>
